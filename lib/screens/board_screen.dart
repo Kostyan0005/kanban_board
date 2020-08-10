@@ -3,6 +3,7 @@ import 'package:kanban_board/constants.dart';
 import 'package:kanban_board/widgets/board_card.dart';
 import 'package:kanban_board/cubits/board/board_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BoardScreenArgs {
   final String token;
@@ -69,10 +70,10 @@ class _BoardScreenState extends State<BoardScreen>
         bottom: TabBar(
           controller: tabController,
           tabs: [
-            Tab(text: 'On hold'),
-            Tab(text: 'In progress'),
-            Tab(text: 'Needs review'),
-            Tab(text: 'Approved'),
+            Tab(text: 'on_hold'.tr()),
+            Tab(text: 'in_progress'.tr()),
+            Tab(text: 'needs_review'.tr()),
+            Tab(text: 'approved'.tr()),
           ],
         ),
       ),
@@ -89,14 +90,15 @@ class _BoardScreenState extends State<BoardScreen>
   List<Widget> getTabList() {
     List<Widget> tabList = [];
     for (int i = 0; i < kTabNumber; i++) {
-      tabList.add(BlocBuilder<BoardCubit, BoardState>(
-        builder: (context, state) {
-          if (state is BoardTabLoaded && state.index == i) {
-            return buildCardListView(state.cards);
-          }
-          return buildProgressIndicator();
-        },
-      ));
+      tabList.add(
+        BlocBuilder<BoardCubit, BoardState>(
+          builder: (context, state) {
+            return state is TabLoaded && state.index == i
+                ? buildCardListView(state.cards)
+                : buildProgressIndicator();
+          },
+        ),
+      );
     }
     return tabList;
   }

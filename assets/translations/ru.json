@@ -1,0 +1,11 @@
+{
+  "login": "Войти",
+  "username_hint": "Введите имя пользователя",
+  "password_hint": "Введите пароль",
+  "short_username_error": "Минимальная длина - 4 символа",
+  "short_password_error": "Минимальная длина - 8 символов",
+  "on_hold": "Ожидает",
+  "in_progress": "В процессе",
+  "needs_review": "Нужно ревью",
+  "approved": "Одобрено"
+}

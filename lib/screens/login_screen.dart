@@ -3,13 +3,11 @@ import 'package:kanban_board/constants.dart';
 import 'package:kanban_board/widgets/login_form_field.dart';
 import 'package:kanban_board/cubits/login/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String oldUsernameError;
-    String oldPasswordError;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Kanban'),
@@ -22,23 +20,31 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             BlocBuilder<LoginCubit, LoginState>(
-              builder: (context, state) {
-                if (state is UsernameError) {
-                  oldUsernameError = state.error;
-                  return buildUsernameField(context, state.error);
+              buildWhen: (prevState, state) {
+                if (state is PasswordError ||
+                    (state is UsernameError &&
+                        prevState is UsernameError &&
+                        prevState.error == state.error)) {
+                  return false;
                 }
-                return buildUsernameField(context, oldUsernameError);
+                return true;
               },
+              builder: (context, state) =>
+                  buildUsernameField(context, state.error),
             ),
             SizedBox(height: 20),
             BlocBuilder<LoginCubit, LoginState>(
-              builder: (context, state) {
-                if (state is PasswordError) {
-                  oldPasswordError = state.error;
-                  return buildPasswordField(context, state.error);
+              buildWhen: (prevState, state) {
+                if (state is UsernameError ||
+                    (state is PasswordError &&
+                        prevState is PasswordError &&
+                        prevState.error == state.error)) {
+                  return false;
                 }
-                return buildPasswordField(context, oldPasswordError);
+                return true;
               },
+              builder: (context, state) =>
+                  buildPasswordField(context, state.error),
             ),
             SizedBox(height: 30),
             GestureDetector(
@@ -52,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
-                  'Log in',
+                  'login'.tr(),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -72,7 +78,7 @@ class LoginScreen extends StatelessWidget {
 
   LoginFormField buildUsernameField(BuildContext context, String error) {
     return LoginFormField(
-      hintText: 'Enter your username',
+      hintText: 'username_hint'.tr(),
       errorText: error,
       onChanged: (username) {
         context.bloc<LoginCubit>().checkUsername(username);
@@ -82,7 +88,7 @@ class LoginScreen extends StatelessWidget {
 
   LoginFormField buildPasswordField(BuildContext context, String error) {
     return LoginFormField(
-      hintText: 'Enter your password',
+      hintText: 'password_hint'.tr(),
       errorText: error,
       isPassword: true,
       onChanged: (password) {

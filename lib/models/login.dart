@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 import 'package:kanban_board/constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Login {
   String _username;
@@ -19,7 +20,7 @@ class Login {
       if (_username.length == 0) {
         return null;
       }
-      return 'Minimum length is 4 characters';
+      return 'short_username_error'.tr();
     }
     _isUsernameValid = true;
     return null;
@@ -32,7 +33,7 @@ class Login {
       if (_password.length == 0) {
         return null;
       }
-      return 'Minimum length is 8 characters';
+      return 'short_password_error'.tr();
     }
     _isPasswordValid = true;
     return null;
@@ -41,17 +42,21 @@ class Login {
   bool canSubmit() => _isUsernameValid && _isPasswordValid;
 
   Future<String> submitForm() async {
-    var response = await http.post('$kApiString/users/login/', body: {
-      'username': _username,
-      'password': _password,
-    });
-    final Map body = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      _token = body['token'];
-      return null;
+    try {
+      var response = await http.post('$kApiString/users/login/', body: {
+        'username': _username,
+        'password': _password,
+      });
+      final Map body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        _token = body['token'];
+        return null;
+      }
+      return body.containsKey('non_field_errors')
+          ? body['non_field_errors'][0]
+          : body.toString();
+    } catch (e) {
+      return e.toString();
     }
-    return body.containsKey('non_field_errors')
-        ? body['non_field_errors'][0]
-        : body.toString();
   }
 }

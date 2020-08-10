@@ -1,0 +1,11 @@
+{
+  "login": "Log in",
+  "username_hint": "Enter your username",
+  "password_hint": "Enter your password",
+  "short_username_error": "Minimum length is 4 characters",
+  "short_password_error": "Minimum length is 8 characters",
+  "on_hold": "On hold",
+  "in_progress": "In progress",
+  "needs_review": "Needs review",
+  "approved": "Approved"
+}

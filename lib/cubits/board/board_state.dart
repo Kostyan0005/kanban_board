@@ -5,9 +5,9 @@ abstract class BoardState {}
 
 class BoardInitial extends BoardState {}
 
-class BoardTabLoaded extends BoardState {
+class TabLoaded extends BoardState {
   final int index;
   final List cards;
 
-  BoardTabLoaded(this.index, this.cards);
+  TabLoaded(this.index, this.cards);
 }

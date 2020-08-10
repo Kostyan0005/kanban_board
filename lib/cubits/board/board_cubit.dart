@@ -12,7 +12,7 @@ class BoardCubit extends Cubit<BoardState> {
   Future<void> handleTabSelection(int index) async {
     await _board.getCardsForTab(index);
     if (_board.currentCards != null) {
-      emit(BoardTabLoaded(index, _board.currentCards));
+      emit(TabLoaded(index, _board.currentCards));
     }
   }
 
